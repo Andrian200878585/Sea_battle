@@ -161,7 +161,6 @@ void Game::clearScreen() {
     system("cls");
 }
 
-// Ожидание нажатия Enter
 void Game::waitForEnter() {
     if (mode == GameMode::PvP) {
         cout << "\nНажмите Enter, чтобы передать ход следующему игроку";
