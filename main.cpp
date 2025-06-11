@@ -5,7 +5,6 @@
 
 using namespace std;
 
-// Функция отображения главного меню
 void showMenu() {
     cout << "-------------------------------------------------------\n";
     cout << "\tМОРСКОЙ БОЙ\n";
@@ -19,10 +18,9 @@ void showMenu() {
 }
 
 int main() {
-    // Установка русской кодировки
     SetConsoleCP(1251);
     SetConsoleOutputCP(1251);
-    srand(time(0)); // Инициализация генератора случайных чисел
+    srand(time(0));
 
     while (true) {
         showMenu();
@@ -58,7 +56,6 @@ int main() {
         game.setupFields();
         game.play();
 
-        // Предложение сыграть еще
         cout << "\nХотите сыграть еще?\n(1 - Да, 0 - Нет): ";
         cin >> choice;
         if (choice != 1) break;
