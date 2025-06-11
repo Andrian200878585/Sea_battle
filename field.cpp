@@ -8,7 +8,7 @@ Field::Field() {
     clear();
 }
 
-// Очистка поля (заполнение пустыми клетками)
+// Очистка поля - заполнение пустыми клетками
 void Field::clear() {
     for (int i = 0; i < FIELD_SIZE; ++i)
         for (int j = 0; j < FIELD_SIZE; ++j)
@@ -19,13 +19,11 @@ void Field::clear() {
 void Field::display(bool showShips) {
     using namespace std;
     
-    // Вывод горизонтальных координат
     cout << "   ";
     for (int i = 0; i < FIELD_SIZE; ++i)
         cout << setw(4) << i;
     cout << "\n";
 
-    // Вывод каждой строки поля
     for (int i = 0; i < FIELD_SIZE; ++i) {
         cout << setw(2) << i << " ";
         for (int j = 0; j < FIELD_SIZE; ++j) {
@@ -38,7 +36,6 @@ void Field::display(bool showShips) {
         }
         cout << "|\n";
 
-        // Разделительная линия между строками
         cout << "   ";
         for (int j = 0; j < FIELD_SIZE; ++j)
             cout << "----";
