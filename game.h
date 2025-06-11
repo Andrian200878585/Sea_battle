@@ -28,4 +28,4 @@ public:
     void waitForEnter();              // Ожидание нажатия Enter
 };
 
-#endif // GAME_H
+#endif
