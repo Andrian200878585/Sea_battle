@@ -1,77 +1,70 @@
 #include "field.h"
+#include "constants.h"
 #include <iostream>
-#include <iomanip>
 #include <cstdlib>
 
-// Конструктор поля - инициализация пустыми клетками
 Field::Field() {
-    clear();
+    clear(); // Инициализация поля пустыми клетками
 }
 
-// Очистка поля - заполнение пустыми клетками
 void Field::clear() {
     for (int i = 0; i < FIELD_SIZE; ++i)
         for (int j = 0; j < FIELD_SIZE; ++j)
             field[i][j] = EMPTY;
 }
 
-// Отображение поля в консоли
 void Field::display(bool showShips) {
-    using namespace std;
-    
-    cout << "   ";
+    std::cout << "   ";
     for (int i = 0; i < FIELD_SIZE; ++i)
-        cout << setw(4) << i;
-    cout << "\n";
+        std::cout << std::setw(4) << i;
+    std::cout << "\n";
 
+    // Вывод каждой строки поля
     for (int i = 0; i < FIELD_SIZE; ++i) {
-        cout << setw(2) << i << " ";
+        std::cout << std::setw(2) << i << " ";
         for (int j = 0; j < FIELD_SIZE; ++j) {
-            cout << "|";
-            // Если не показывать корабли и клетка содержит корабль - показываем пустую
+            std::cout << "|";
+            // Если не показывать корабли и клетка содержит корабль - показывать пустую
             if (!showShips && field[i][j] == SHIP)
-                cout << setw(2) << EMPTY << " ";
+                std::cout << std::setw(2) << EMPTY << " ";
             else
-                cout << setw(2) << field[i][j] << " ";
+                std::cout << std::setw(2) << field[i][j] << " ";
         }
-        cout << "|\n";
+        std::cout << "|\n";
 
-        cout << "   ";
+        std::cout << "   ";
         for (int j = 0; j < FIELD_SIZE; ++j)
-            cout << "----";
-        cout << "-\n";
+            std::cout << "----";
+        std::cout << "-\n";
     }
 }
 
-// Ручное размещение корабля
 bool Field::placeShipManual(int size) {
-    using namespace std;
-    vector<pair<int, int>> positions; // Вектор для хранения координат палуб
-    
-    cout << "Расставьте корабль из " << size << " палуб:\n";
+    std::vector<std::pair<int, int>> positions; // Вектор для хранения координат палуб
+    std::cout << "Расставьте корабль из " << size << " палуб:\n";
     for (int i = 0; i < size; ++i) {
         int x, y;
-        cout << "Введите координаты " << i + 1 << "-й палубы (вертик. ; горизонт.): ";
-        cin >> x >> y;
+        std::cout << "Введите координаты " << i + 1 << "-й палубы (вертик. ; горизонт.): ";
+        std::cin >> x >> y;
 
         if (!isValidPosition(x, y)) {
-            cout << "Координаты вне поля!\n";
+            std::cout << "Координаты вне поля!\n";
             return false;
         }
         if (field[x][y] != EMPTY) {
-            cout << "!Эта клетка уже занята!\n";
+            std::cout << "!Эта клетка уже занята!\n";
             return false;
         }
-        positions.push_back({x, y});
+        positions.push_back({ x, y });
     }
 
     if (!isStraightAndConnected(positions)) {
-        cout << "Корабль должен быть прямым и непрерывным\n";
+        std::cout << "Корабль должен быть прямым и непрерывным\n";
         return false;
     }
 
     if (!areNeighboursEmpty(positions)) {
-        cout << "Корабли должны находиться на расстоянии минимум 1 клетка\n";
+        std::cout << "Корабли должны находиться на расстоянии минимум 1 клетка\n";
         return false;
     }
 
@@ -82,16 +75,15 @@ bool Field::placeShipManual(int size) {
     return true;
 }
 
-// Автоматическое размещение корабля
 bool Field::placeShipAuto(int size) {
     int attempts = 0;
     // Делаем до 100 попыток разместить корабль
     while (attempts++ < 100) {
         int x = rand() % FIELD_SIZE;
         int y = rand() % FIELD_SIZE;
-        bool horizontal = rand() % 2; // Случайная ориентация
+        bool horizontal = rand() % 2; // Случайная ориентация (горизонтальная/вертикальная)
 
-        vector<pair<int, int>> positions;
+        std::vector<std::pair<int, int>> positions;
         // Генерация всех клеток корабля
         for (int i = 0; i < size; ++i) {
             int nx = horizontal ? x : x + i;
@@ -100,10 +92,10 @@ bool Field::placeShipAuto(int size) {
             if (!isValidPosition(nx, ny)) break;
             if (field[nx][ny] != EMPTY) break;
 
-            positions.push_back({nx, ny});
+            positions.push_back({ nx, ny });
         }
 
-        // Если все клетки валидны и свободны - размещаем
+        // Если все клетки корабля валидны и свободны то размещаем
         if (positions.size() == size && isStraightAndConnected(positions) && areNeighboursEmpty(positions)) {
             for (auto p : positions)
                 field[p.first][p.second] = SHIP;
@@ -113,40 +105,43 @@ bool Field::placeShipAuto(int size) {
     return false;
 }
 
-// Проверка валидности координат
 bool Field::isValidPosition(int x, int y) {
     return x >= 0 && x < FIELD_SIZE && y >= 0 && y < FIELD_SIZE;
 }
 
-// Проверка формы корабля
-bool Field::isStraightAndConnected(const vector<pair<int, int>>& positions) {
-    if (positions.size() <= 1) return true;
+bool Field::isStraightAndConnected(const std::vector<std::pair<int, int>>& positions) {
+    if (positions.size() <= 1) return true; // Корабль из 1 палубы всегда валиден
 
-    // Определение ориентации по первым двум палубам
+    // Определение ориентации корабля (по первым двум палубам)
     bool horizontal = positions[0].first == positions[1].first;
 
+    // Проверка всех последующих палуб
     for (size_t i = 1; i < positions.size(); ++i) {
         if (horizontal) {
+            // Для горизонтального корабля x должен быть одинаковым, а y увеличиваться на 1
             if (positions[i].first != positions[0].first ||
-                positions[i].second != positions[i-1].second + 1)
+                positions[i].second != positions[i - 1].second + 1)
                 return false;
-        } else {
+        }
+        else {
+            // Для вертикального корабля y должен быть одинаковым, а x увеличиваться на 1
             if (positions[i].second != positions[0].second ||
-                positions[i].first != positions[i-1].first + 1)
+                positions[i].first != positions[i - 1].first + 1)
                 return false;
         }
     }
     return true;
 }
 
-// Проверка соседних клеток
-bool Field::areNeighboursEmpty(const vector<pair<int, int>>& positions) {
+bool Field::areNeighboursEmpty(const std::vector<std::pair<int, int>>& positions) {
     for (auto pos : positions) {
+        // Проверка всех 8 соседних клеток
         for (int dx = -1; dx <= 1; ++dx) {
             for (int dy = -1; dy <= 1; ++dy) {
                 int nx = pos.first + dx;
                 int ny = pos.second + dy;
                 if (isValidPosition(nx, ny)) {
+                    // Если в соседней клетке корабль, и это не часть текущего корабля - ошибка
                     if (field[nx][ny] == SHIP) {
                         bool isPartOfShip = false;
                         for (auto p : positions) {
@@ -164,24 +159,23 @@ bool Field::areNeighboursEmpty(const vector<pair<int, int>>& positions) {
     return true;
 }
 
-// Выстрел по координатам
 bool Field::shootAt(int x, int y) {
     if (!isValidPosition(x, y)) return false;
 
-    if (field[x][y] == SHIP) {
+    if (field[x][y] == SHIP) { // Попадание в корабль
         field[x][y] = HIT;
         return true;
-    } else if (field[x][y] == EMPTY) {
+    }
+    else if (field[x][y] == EMPTY) { // Промах
         field[x][y] = MISS;
     }
     return false;
 }
 
-// Проверка уничтожения всех кораблей
 bool Field::allShipsDestroyed() {
     for (int i = 0; i < FIELD_SIZE; ++i)
         for (int j = 0; j < FIELD_SIZE; ++j)
-            if (field[i][j] == SHIP)
+            if (field[i][j] == SHIP) // Если найден хотя бы один непораженный корабль
                 return false;
     return true;
 }
