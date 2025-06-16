@@ -34,21 +34,21 @@ int main() {
 
         // Выбор режима игры
         switch (choice) {
-            case 1:
-                mode = GameMode::PvP;
-                difficulty = Difficulty::Random;
-                break;
-            case 2:
-                mode = GameMode::PvC;
-                difficulty = Difficulty::Random;
-                break;
-            case 3:
-                mode = GameMode::PvC;
-                difficulty = Difficulty::Smart;
-                break;
-            default:
-                cout << "Неверный выбор!\n";
-                continue;
+        case 1:
+            mode = GameMode::PvP;
+            difficulty = Difficulty::Random;
+            break;
+        case 2:
+            mode = GameMode::PvC;
+            difficulty = Difficulty::Random;
+            break;
+        case 3:
+            mode = GameMode::PvC;
+            difficulty = Difficulty::Smart;
+            break;
+        default:
+            cout << "Неверный выбор!\n";
+            continue;
         }
 
         // Создание и запуск игры
