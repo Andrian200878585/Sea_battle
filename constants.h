@@ -1,8 +1,6 @@
-#ifndef CONSTANTS_H
-#define CONSTANTS_H
+#pragma once
 
-
-const int FIELD_SIZE = 10; // Размер игрового поля
+const int FIELD_SIZE = 10;
 const char EMPTY = ' ';    // Пустая клетка
 const char SHIP = 's';     // Корабль
 const char HIT = 'x';      // Попадание
@@ -13,10 +11,7 @@ enum class Difficulty {
     Smart    // "Умные" ходы с запоминанием попаданий
 };
 
-// Режим игры
 enum class GameMode {
     PvP,  // Игрок против игрока
     PvC   // Игрок против компьютера
 };
-
-#endif
