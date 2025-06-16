@@ -1,12 +1,9 @@
-#ifndef GAME_H
-#define GAME_H
-
+#pragma once
 #include "field.h"
 #include "constants.h"
 #include <vector>
 #include <string>
 
-// Класс, управляющий игровым процессом
 class Game {
 private:
     GameMode mode;          // Режим игры
@@ -27,5 +24,3 @@ public:
     void clearScreen();               // Очистка экрана
     void waitForEnter();              // Ожидание нажатия Enter
 };
-
-#endif
